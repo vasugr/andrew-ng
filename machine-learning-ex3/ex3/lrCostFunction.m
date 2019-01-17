@@ -11,7 +11,7 @@ m = length(y); % number of training examples
 % You need to return the following variables correctly 
 J = 0;
 grad = zeros(size(theta));
-
+n = rows(theta);
 % ====================== YOUR CODE HERE ======================
 % Instructions: Compute the cost of a particular choice of theta.
 %               You should set J to the cost.
@@ -20,7 +20,6 @@ grad = zeros(size(theta));
 %
 % Hint: The computation of the cost function and gradients can be
 %       efficiently vectorized. For example, consider the computation
-%
 %           sigmoid(X * theta)
 %
 %       Each row of the resulting matrix will contain the value of the
@@ -36,17 +35,28 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
+h = sigmoid(X*theta);
+for i = 1:m
+    J = J - y(i).*log(h(i)) - (1-y(i)).*log(1-h(i));
+end
+r=0;
+for j = 2:n
+    r = r + theta(j)^2;
+end
+r = r .* lambda ./ 2;
+J = J + r;
+J = J/m;
 
-
-
-
-
-
-
-
-
+for j = 1:n
+    for i=1:m
+        grad(j) = grad(j) + (h(i) - y(i)).*X(i,j);
+    end
+    grad(j)  = (grad(j))/m;
+end
+for j = 2:n
+    grad(j) = grad(j) + lambda* theta(j)/m;
+end
 % =============================================================
-
 grad = grad(:);
 
 end
